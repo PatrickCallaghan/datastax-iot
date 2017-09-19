@@ -36,6 +36,4 @@ public class DeviceStat {
 		return "DeviceStat [deviceId=" + deviceId + ", yearMonthDay=" + yearMonthDay + ", statName=" + statName
 				+ ", statValue=" + statValue + "]";
 	}
-	
-	
 }

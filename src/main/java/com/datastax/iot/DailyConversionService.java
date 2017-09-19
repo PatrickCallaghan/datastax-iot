@@ -1,7 +1,5 @@
 package com.datastax.iot;
 
-import java.util.List;
-
 import org.joda.time.DateTime;
 
 import com.datastax.iot.service.IoTService;

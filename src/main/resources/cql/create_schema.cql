@@ -19,7 +19,7 @@ Create table datastax.device_data_bucket (
 Create table datastax.device_data_compressed (
 	id text,
 	year_month_day int,
-	measurements text,
+	values text,
 	PRIMARY KEY ((id, year_month_day))
 );
 

@@ -1,8 +1,5 @@
 package com.datastax.timeseries.utils;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.commons.lang.ArrayUtils;
 
 import com.datastax.timeseries.model.TimeSeries;
@@ -11,7 +8,6 @@ import cern.colt.list.DoubleArrayList;
 import cern.colt.list.LongArrayList;
 
 public class TimeSeriesUtils {
-
 	
 	public static TimeSeries filter(TimeSeries timeSeries, long from, long to) {
 
