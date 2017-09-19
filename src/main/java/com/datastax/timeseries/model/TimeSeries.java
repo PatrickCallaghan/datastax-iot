@@ -1,6 +1,9 @@
 package com.datastax.timeseries.model;
 
+import java.text.Format;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.joda.time.DateTime;
@@ -9,6 +12,8 @@ import com.google.common.primitives.Longs;
 
 public class TimeSeries {
 
+	private static final Format formatter = new SimpleDateFormat("yyyyMMdd");
+	
 	private String symbol;
 	private long[] dates;
 	private double[] values;
@@ -52,6 +57,11 @@ public class TimeSeries {
 		return "TimeSeries [symbol=" + symbol + ", dates=" + Arrays.toString(dates) + ", values="
 				+ Arrays.toString(values) + "]";
 	}
+	
+	public int getYearMonthDay() {
+		return Integer.parseInt(formatter.format(new Date(lowestDate())));
+	}
+	
 	public String toFormatterString() {
 		StringBuffer buffer = new StringBuffer();
 		

@@ -1,4 +1,2 @@
-truncate sample_keyspace.test;
-
-drop keyspace sample_keyspace;
+drop keyspace datastax;
 	

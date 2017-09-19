@@ -1,11 +1,47 @@
 package com.datastax.timeseries.utils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.lang.ArrayUtils;
 
 import com.datastax.timeseries.model.TimeSeries;
 
+import cern.colt.list.DoubleArrayList;
+import cern.colt.list.LongArrayList;
+
 public class TimeSeriesUtils {
 
+	
+	public static TimeSeries filter(TimeSeries timeSeries, long from, long to) {
+
+		if (timeSeries==null) {
+			return timeSeries;
+		}
+		
+		long[] oldDates = timeSeries.getDates();
+		double[] oldValues = timeSeries.getValues();
+		
+		LongArrayList dates = new LongArrayList(oldDates.length);
+		DoubleArrayList values = new DoubleArrayList(oldDates.length);
+		
+		for (int i = 0; i < oldDates.length; i++){
+			
+			long date = oldDates[i];
+			double oldValue = oldValues[i];
+			
+			if (date >= from && date < to){
+				dates.add(date);
+				values.add(oldValue);
+			}
+		}
+		
+		dates.trimToSize();
+		values.trimToSize();
+		
+		return new TimeSeries(timeSeries.getSymbol(), dates.elements(), values.elements());
+	}
+	
 	static public TimeSeries mergeTimeSeries(TimeSeries timeSeries1, TimeSeries timeSeries2) {
 		
 		if (timeSeries1 == null && timeSeries2 == null){

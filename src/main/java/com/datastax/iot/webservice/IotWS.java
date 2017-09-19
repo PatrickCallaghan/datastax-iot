@@ -19,9 +19,9 @@ import com.datastax.iot.service.IoTService;
 
 @WebService
 @Path("/")
-public class IotWS {
+public class IoTWS {
 
-	private Logger logger = LoggerFactory.getLogger(IotWS.class);
+	private Logger logger = LoggerFactory.getLogger(IoTWS.class);
 	private SimpleDateFormat inputDateFormat = new SimpleDateFormat("yyyyMMdd");
 
 	//Service Layer.
