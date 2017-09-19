@@ -6,7 +6,14 @@ public class DeviceStat {
 	private int yearMonthDay;
 	private String statName;
 	private double statValue;
-	
+
+	public DeviceStat(String deviceId, int yearMonthDay, String statName, double statValue) {
+		super();
+		this.deviceId = deviceId;
+		this.yearMonthDay = yearMonthDay;
+		this.statName = statName;
+		this.statValue = statValue;
+	}
 	public String getDeviceId() {
 		return deviceId;
 	}

@@ -1,23 +1,27 @@
 package com.datastax.iot.service;
 
+import java.io.IOException;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import org.codehaus.jackson.JsonGenerationException;
+import org.codehaus.jackson.map.JsonMappingException;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.datastax.demo.utils.PropertyHelper;
 import com.datastax.demo.utils.Timer;
-import com.datastax.driver.core.KeyspaceMetadata;
 import com.datastax.iot.dao.IoTDao;
 import com.datastax.iot.dao.TimeSeriesJsonReader;
 import com.datastax.iot.dao.TimeSeriesReader;
+import com.datastax.timeseries.model.DeviceDataPoint;
 import com.datastax.timeseries.model.TimeSeries;
 import com.datastax.timeseries.utils.DateUtils;
+import com.datastax.timeseries.utils.TimeSeriesHelper;
 import com.datastax.timeseries.utils.TimeSeriesUtils;
 import com.google.common.util.concurrent.ListenableFuture;
 
@@ -33,10 +37,6 @@ public class IoTService {
 		this.dao = new IoTDao(contactPointsStr.split(","));
 	}	
 	
-	public List<KeyspaceMetadata> getKeyspaces() {
-		return dao.getKeyspaces();
-	}
-
 	public static IoTService getInstance() {
 		return service;
 	}
@@ -46,8 +46,17 @@ public class IoTService {
 		int yearMonthDay = Integer.parseInt(formatter.format(dateTime.toDate()));
 		
 		try {
-			dao.getTimeSeries(device, yearMonthDay);
+			TimeSeries timeSeries = dao.getTimeSeries(device, yearMonthDay);
+			dao.insertDeviceCompressed(timeSeries);
+			
+			dao.insertDeviceStatsList(TimeSeriesUtils.stats(timeSeries));
 		} catch (InterruptedException | ExecutionException e) {
+			e.printStackTrace();
+		} catch (JsonGenerationException e) {
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
@@ -55,12 +64,17 @@ public class IoTService {
 	public TimeSeries getDeviceData(String deviceId, DateTime from, DateTime to){
 				
 		return getTimeSeries(deviceId, from, to);
-	}
+	}	
 	
-	
+	/**
+	 * Internal processing of geting TimeSeries data
+	 * @param symbol
+	 * @param fromDate
+	 * @param toDate
+	 * @return
+	 */
 	public TimeSeries getTimeSeries(String symbol, DateTime fromDate, DateTime toDate) {
 		TimeSeries result = null;
-
 		DateTime endOfMonth = fromDate;
 
 		Timer timer = new Timer();
@@ -106,7 +120,7 @@ public class IoTService {
 			finalTimeSeries = TimeSeriesUtils.mergeTimeSeries(finalTimeSeries, timeSeries);
 		}
 		t.end();
-		logger.info("Get " + symbol + " took " + t.getTimeTakenMillis() + "ms " + finalTimeSeries.getDates().length
+		logger.info("Data for " + symbol + " took " + t.getTimeTakenMillis() + "ms " + finalTimeSeries.getDates().length
 				+ " points.");
 		return finalTimeSeries;
 	}
@@ -138,6 +152,10 @@ public class IoTService {
 
 	private int getYearMonthDay(DateTime dateTime) {
 		return Integer.parseInt(formatter.format(dateTime.toDate()));
+	}
+
+	public void save(DeviceDataPoint deviceDataPoint) {
+		dao.insertDeviceData(deviceDataPoint);		
 	}
 
 }

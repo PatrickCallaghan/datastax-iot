@@ -11,7 +11,13 @@ public class DeviceDataPoint {
 	private String deviceId;
 	private Date time;
 	private double value;
-
+	
+	public DeviceDataPoint(String deviceId, Date time, double value) {
+		super();
+		this.deviceId = deviceId;
+		this.time = time;
+		this.value = value;
+	}
 	public String getDeviceId() {
 		return deviceId;
 	}
