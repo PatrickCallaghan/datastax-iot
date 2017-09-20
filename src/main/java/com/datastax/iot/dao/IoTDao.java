@@ -146,7 +146,7 @@ public class IoTDao {
 		while (iterator.hasNext()) {
 			Row row = iterator.next();
 
-			dates.add(row.getTimestamp("date").getTime());
+			dates.add(row.getTimestamp("time").getTime());
 			values.add(row.getDouble("value"));
 		}
 

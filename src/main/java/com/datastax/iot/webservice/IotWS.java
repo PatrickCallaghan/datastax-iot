@@ -38,4 +38,14 @@ public class IoTWS {
 		return Response.status(201).entity(service.getDeviceData(deviceId, fromDate, toDate)).build();
 	}
 
+	@GET
+	@Path("/get/bydatetime/")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getTestSeries(){
+			
+					
+		return Response.status(201).entity("Success").build();
+	}
+	
+	
 }

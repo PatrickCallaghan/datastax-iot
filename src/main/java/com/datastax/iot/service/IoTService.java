@@ -41,6 +41,11 @@ public class IoTService {
 		return service;
 	}
 
+	/**
+	 * For a device and a specific data, get the raw data, create statistic and write compressed version
+	 * @param device device id 
+	 * @param dateTime day to be processed. 
+	 */
 	public void convertRawToCompressed(String device, DateTime dateTime) {
 		
 		int yearMonthDay = Integer.parseInt(formatter.format(dateTime.toDate()));
@@ -67,7 +72,7 @@ public class IoTService {
 	}	
 	
 	/**
-	 * Internal processing of geting TimeSeries data
+	 * Internal processing of getting TimeSeries data
 	 * @param symbol
 	 * @param fromDate
 	 * @param toDate
@@ -76,8 +81,15 @@ public class IoTService {
 	public TimeSeries getTimeSeries(String symbol, DateTime fromDate, DateTime toDate) {
 		TimeSeries result = null;
 		DateTime endOfMonth = fromDate;
+		
+		//For filtering
+		DateTime startFilterDate = fromDate;
+		DateTime endFilterDate = toDate;
 
 		Timer timer = new Timer();
+		
+		//Process will get the data in parrallel by month to avoid overloading the cluster. 
+		//This could be improved with a larger cluster. 
 		while (endOfMonth.isBefore(toDate)) {
 
 			if (endOfMonth.getMonthOfYear() == 12) {
@@ -86,8 +98,8 @@ public class IoTService {
 			endOfMonth = endOfMonth.withTimeAtStartOfDay().withMonthOfYear(endOfMonth.plusMonths(1).getMonthOfYear())
 					.withDayOfMonth(1);
 
-			logger.info(endOfMonth.toDate().toString());
 			TimeSeries timeSeries;
+			
 			if (toDate.isBefore(endOfMonth)) {
 				timeSeries = getTimeSeriesByMonth(symbol, fromDate, toDate);
 			} else {
@@ -95,9 +107,10 @@ public class IoTService {
 				fromDate = endOfMonth;
 			}
 
-			result = TimeSeriesUtils.mergeTimeSeries(result, timeSeries);
+			//Merge the results 
+			result = TimeSeriesUtils.mergeTimeSeries(result, timeSeries);			
 		}
-		result = TimeSeriesUtils.filter(result, fromDate.getMillis(), toDate.getMillis());
+		result = TimeSeriesUtils.filter(result, startFilterDate.getMillis(), endFilterDate.getMillis());
 
 		timer.end();
 		logger.info("Request took " + timer.getTimeTakenMillis() + " over a total of " + result.getDates().length

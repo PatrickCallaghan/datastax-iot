@@ -1,11 +1,8 @@
-# datastax-iot-demo
+# DataStax IoT
 
-This is a small demo to show how to insert meter readings for a smart reader. Note : the readings come in through a file with
-a no of readings per day. 
+This is a small demo to show how to readings for a smart device. The readings are realtime and come are every 10 secs for a device.  
 
 ## Schema Setup
-Note : This will drop the keyspace "datastax_iot_demo" and create a new one. All existing data will be lost. 
-
 To specify contact points use the contactPoints command line parameter e.g. 
 
 	'-DcontactPoints=192.168.25.100,192.168.25.101'

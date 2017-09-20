@@ -7,6 +7,11 @@ import org.slf4j.LoggerFactory;
 import com.datastax.demo.utils.PropertyHelper;
 import com.datastax.iot.service.IoTService;
 
+/**
+ * The main class to run the conversion service. This will IoT service to create statistics and compress daily data. 	
+ * @author patrickcallaghan
+ *
+ */
 public class DailyConversionService {
 	private static Logger logger = LoggerFactory.getLogger(DailyConversionService.class);
 	private IoTService service;
@@ -22,7 +27,6 @@ public class DailyConversionService {
 
 	public static void main(String args[]) {
 		DailyConversionService service = new DailyConversionService();
-
 		service.start();
 	}
 

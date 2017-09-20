@@ -1,9 +1,12 @@
 package com.datastax.timeseries.utils;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.datastax.timeseries.model.DeviceStat;
 import com.datastax.timeseries.model.TimeSeries;
@@ -13,6 +16,7 @@ import cern.colt.list.LongArrayList;
 
 public class TimeSeriesUtils {
 
+	private static Logger logger = LoggerFactory.getLogger(TimeSeriesUtils.class);
 	public static final String MIN = "min";
 	public static final String MAX = "max";
 	public static final String AVG = "avg";
@@ -20,6 +24,10 @@ public class TimeSeriesUtils {
 	public static TimeSeries filter(TimeSeries timeSeries, long from, long to) {
 
 		if (timeSeries == null) {
+			return timeSeries;
+		}
+		
+		if (timeSeries.lowestDate() > from && timeSeries.highestDate() < to){
 			return timeSeries;
 		}
 
@@ -48,6 +56,7 @@ public class TimeSeriesUtils {
 
 	static public TimeSeries mergeTimeSeries(TimeSeries timeSeries1, TimeSeries timeSeries2) {
 
+		
 		if (timeSeries1 == null && timeSeries2 == null) {
 			return null;
 		}
@@ -58,6 +67,11 @@ public class TimeSeriesUtils {
 			return timeSeries1;
 		}
 
+		logger.trace("Merging :" + timeSeries1.getYearMonthDay() + " and " + timeSeries2.getYearMonthDay());
+		
+		logger.trace("Merging :" + new Date(timeSeries1.lowestDate()) +  "/" + new Date(timeSeries1.highestDate()) 
+		+ " and " +new Date(timeSeries2.lowestDate()) +  "/" + new Date(timeSeries2.highestDate()));
+		
 		if (timeSeries1.highestDate() > timeSeries2.highestDate()
 				&& timeSeries1.lowestDate() > timeSeries2.highestDate()) {
 

@@ -21,7 +21,6 @@ public class DateUtils {
 		    dateStart = dateStart.plusDays(1);
 		}
 		
-		dates.add(dateEnd);
 		return dates;		
 	}
 	
