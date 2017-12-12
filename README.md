@@ -1,6 +1,6 @@
 # DataStax IoT
 
-This is a small demo to show how to readings for a smart device. The readings are realtime and come are every 10 secs for a device.  
+This is a small demo to show how to readings for a smart device. The readings are realtime and come in every 10 secs for a device.  
 
 ## Schema Setup
 To specify contact points use the contactPoints command line parameter e.g. 
